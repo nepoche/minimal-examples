@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "incremental": true,
+    "target": "ES2016",
+    "module": "commonjs",
+    "allowJs": true,
+    "typeRoots": ["node_modules/@types"],
+  }
+}
