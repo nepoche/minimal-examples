@@ -33,10 +33,10 @@ describe('Two chain tests', function () {
     ];
 
     ganacheServer1 = startGanacheServer(3333, chainId1, ganacheAccounts);
-    provider1 = new ethers.providers.WebSocketProvider('http://localhost:3333');
+    provider1 = new ethers.providers.WebSocketProvider('ws://localhost:3333');
 
     ganacheServer2 = startGanacheServer(4444, chainId2, ganacheAccounts);
-    provider2 = new ethers.providers.WebSocketProvider('http://localhost:4444');
+    provider2 = new ethers.providers.WebSocketProvider('ws://localhost:4444');
 
     // Deploy token contracts
     const wallet1 = new ethers.Wallet(deployerPrivateKey, provider1);
@@ -63,6 +63,16 @@ describe('Two chain tests', function () {
     console.log(`tokenBalance on chain 1: ${balance1}`);
     const balance2 = await tokenInstance2.getBalance(senderAddress);
     console.log(`tokenBalance on chain 2: ${balance2}`);
+
+    const filter = tokenInstance1.contract.filters.Approval();
+    
+    await new Promise(function(resolve) {
+      provider1.on(filter, () => {
+        console.log(`hit event`);
+        resolve(true);
+      })
+      tokenInstance1.approveSpending('0x0101010101010101010101010101010101010101');
+    })
   });
 
   after(function () {

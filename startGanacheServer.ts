@@ -13,7 +13,9 @@ export function startGanacheServer(
 ) {
   const ganacheServer = ganache.server({
     accounts: populatedAccounts,
-    blockTime: 2,
+    miner: {
+      instamine: 'strict'
+    },
     network_id: networkId,
     chainId: networkId,
     ...options,
